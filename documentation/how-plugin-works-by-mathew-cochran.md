@@ -28,12 +28,12 @@ class Divider:ICalculator
      #region ICalculator Members
      public int Calculate(int a, int b)  
      {          
-	     return a / b;  
+	return a / b;  
      }
 
      public char GetSymbol()  
      {          
-	     return '/';  
+	return '/';  
      }
      #endregion
 }
@@ -44,7 +44,7 @@ Injecting our implementation of the ICalculator interface with the constructor, 
 ```c#
 public class CalculatorHost    
 {     
-	 public CalculatorHost(ICalculator calculator)  
+     public CalculatorHost(ICalculator calculator)  
      {  
           m_calculator = calculator;  
      }
@@ -56,28 +56,28 @@ public class CalculatorHost    
 
      public int X          
      {          
-	     get { return m_x; }          
-	     set { m_x = value; }  
+	get { return m_x; }          
+	set { m_x = value; }  
      }
 
      public int Y  
      {          
-	     get { return m_y; }          
-	     set { m_y = value; }     
-	 }
+	get { return m_y; }          
+	set { m_y = value; }     
+     }
 
      public int Calculate()  
      {          
-	     return m_calculator.Calculate(m_x, m_y);  
+	return m_calculator.Calculate(m_x, m_y);  
      }
 
      public override string ToString()  
      {          
-	     return string.Format("{0} {1} {2} = {3}",               
-		     m_x.ToString(),  
-	         m_calculator.GetSymbol(),  
-	         m_y.ToString(),  
-	         m_calculator.Calculate(m_x, m_y));  
+	return string.Format("{0} {1} {2} = {3}", 
+		m_x.ToString(),  
+	        m_calculator.GetSymbol(),  
+	        m_y.ToString(),  
+	        m_calculator.Calculate(m_x, m_y));  
      }
 
 }
@@ -99,10 +99,10 @@ public static class CalculatorHostProvider
      {  
           get           
           {               
-	          if (null == m_calculators)  
-                    Reload();
+		if (null == m_calculators)  
+			Reload();
               
-              return m_calculators;   
+		return m_calculators;   
           }  
      }  
 }
@@ -117,9 +117,9 @@ public static void Reload()
 {
 
      if (null == m_calculators)  
-          m_calculators = new List<CalculatorHost>();     
+	m_calculators = new List<CalculatorHost>();     
      else          
-	     m_calculators.Clear();
+	m_calculators.Clear();
 
      m_calculators.Add(new CalculatorHost()); // load the default  
      List<Assembly> plugInAssemblies = LoadPlugInAssemblies();  
@@ -127,7 +127,7 @@ public static void Reload()
 
      foreach (ICalculator calc in plugIns)  
      {  
-          m_calculators.Add(new CalculatorHost(calc));  
+	m_calculators.Add(new CalculatorHost(calc));  
      }  
 }
 ```
@@ -140,18 +140,18 @@ While not absolutely required for this technique, it is a good idea to explicit
 [AttributeUsage(AttributeTargets.Class)]  
 public class CalculationPlugInAttribute : Attribute  
 {     
-	 public CalculationPlugInAttribute(string description)  
+     public CalculationPlugInAttribute(string description)  
      {  
-          m_description = description;  
+	m_description = description;  
      }
 
      private string m_description;
 
      public string Description     
      {          
-	     get { return m_description; }          
-	     set { m_description = value; }     
-	 }  
+	get { return m_description; }          
+	set { m_description = value; }     
+     }  
 }
 ```
 
@@ -161,18 +161,17 @@ So now, when we build a plug-in, we'll make sure to decorate it to explicitly de
 [CalculationPlugInAttribute("This plug-in will add two numbers together")]  
 class Adder: ICalculator  
 {     
-	 #region ICalculator Members
+     #region ICalculator Members
      public int Calculate(int a, int b)     
      {          
-	     return a + b;     
-	 }
+	return a + b;     
+     }
 
      public char GetSymbol()     
      {          
-	     return '+';     
-	 }
+	return '+';     
+     }
      #endregion
-
 }
 ```
 
@@ -183,17 +182,17 @@ Loading the assemblies from the "Plugins" folder is a straightforward process. W
 ```c#
 private static List<Assembly> LoadPlugInAssemblies()  
 {     
-	 DirectoryInfo dInfo = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "Plugins"));     
-	 FileInfo[] files = dInfo.GetFiles("*.dll");     
-	 List<Assembly> plugInAssemblyList = new List<Assembly>();
+     DirectoryInfo dInfo = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "Plugins"));     
+     FileInfo[] files = dInfo.GetFiles("*.dll");     
+     List<Assembly> plugInAssemblyList = new List<Assembly>();
 
      if (null != files)     
      {          
-	     foreach (FileInfo file in files)          
-	     {               
-		     plugInAssemblyList.Add(Assembly.LoadFile(file.FullName));
-	     }     
-	 }
+	foreach (FileInfo file in files)          
+	{               
+	    plugInAssemblyList.Add(Assembly.LoadFile(file.FullName));
+	}     
+     }
 
      return plugInAssemblyList;
 }
@@ -213,9 +212,9 @@ static List<ICalculator> GetPlugIns(List<Assembly> assemblies)
      // have the CalculationPlugInAttribute     
      List<Type> calculatorList = availableTypes.FindAll(delegate(Type t)  
      {          
-	     List<Type> interfaceTypes = new List<Type>(t.GetInterfaces());          
-	     object[] arr = t.GetCustomAttributes(typeof(CalculationPlugInAttribute), true);     
-	     return !(arr == null || arr.Length == 0) && interfaceTypes.Contains(typeof(ICalculator));  
+	List<Type> interfaceTypes = new List<Type>(t.GetInterfaces());          
+	object[] arr = t.GetCustomAttributes(typeof(CalculationPlugInAttribute), true);     
+	return !(arr == null || arr.Length == 0) && interfaceTypes.Contains(typeof(ICalculator));  
      });
 
      // convert the list of Objects to an instantiated list of ICalculators    
@@ -238,9 +237,9 @@ static void Main(string[] args)
 
      foreach (CalculatorHost calculator in CalculatorHostProvider.Calculators)  
      {  
-          calculator.X = x;  
-          calculator.Y = y;          
-          Console.WriteLine(calculator.ToString());  
+	calculator.X = x;  
+	calculator.Y = y;          
+	Console.WriteLine(calculator.ToString());  
      }          
      
      Console.ReadLine();
