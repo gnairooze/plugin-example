@@ -11,7 +11,7 @@ namespace PluginExample
 
         static CalculatorHostProvider()
         {
-            Calculators= new List<CalculatorHost>();
+            Calculators= [];
             Reload();
         }
 
@@ -34,7 +34,7 @@ namespace PluginExample
             
             FileInfo[] files = pluginPath.GetFiles("*.dll");
 
-            List<Assembly> plugInAssemblies = new();
+            List<Assembly> plugInAssemblies = [];
 
             if (null != files)
             {
@@ -49,7 +49,7 @@ namespace PluginExample
 
         private static List<ICalculator> GetPlugIns(List<Assembly> assemblies)
         {
-            List<Type> availableTypes = new();
+            List<Type> availableTypes = [];
 
             foreach (Assembly currentAssembly in assemblies)
                 availableTypes.AddRange(currentAssembly.GetTypes());
@@ -64,9 +64,10 @@ namespace PluginExample
             });
 
             // convert the list of Objects to an instantiated list of ICalculators
-            return calculatorList.ConvertAll<ICalculator>(delegate (Type t) 
-            { return Activator.CreateInstance(t) as ICalculator; });
-
+            return calculatorList.ConvertAll<ICalculator>(delegate (Type t)
+            {
+                return (Activator.CreateInstance(t) as ICalculator)!;
+            });
         }
     }
 }
