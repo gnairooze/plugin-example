@@ -7,6 +7,8 @@ using PluginExample;
 
 int x = 8, y = 2;
 
+Console.WriteLine($"calculators count: {CalculatorHostProvider.Calculators.Count}");
+
 foreach (CalculatorHost calculator in CalculatorHostProvider.Calculators)
 {
     calculator.X = x;
@@ -14,5 +16,5 @@ foreach (CalculatorHost calculator in CalculatorHostProvider.Calculators)
     Console.WriteLine(calculator.ToString());
 }
 
-
+Console.WriteLine("Press any key to exit...");
 Console.ReadLine();
